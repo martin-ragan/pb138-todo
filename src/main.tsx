@@ -6,6 +6,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { TaskDetail } from './routes/TaskDetail';
 import { Tasks } from './routes/Tasks';
 import { About } from './routes/About';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +16,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Tasks/>
+        element: <Tasks />
       },
       {
         path: "/:id",
@@ -24,12 +26,14 @@ const router = createBrowserRouter([
   },
   {
     path: "/about",
-    element: <About/>
+    element: <About />
   }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>,
 )
