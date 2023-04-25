@@ -1,12 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { useForm } from 'react-hook-form';
-import { Todo } from '../../models/models';
 import { ErrorMessage } from '../ErrorMessage/ErrorMessage';
-
-interface AddFormProps {
-    addTodo: (newData: Omit<Todo, "id" | "completed">) => void
-}
+import { useAppDispatch } from '../../app/hooks';
+import { addTask } from '../../features/tasks/tasks-slice';
 
 const schema = yup.object({
     title: yup.string().required(),
@@ -16,7 +13,8 @@ const schema = yup.object({
 
 type FormData = yup.InferType<typeof schema>;
 
-export const AddForm = ({addTodo}: AddFormProps) => {
+export const AddForm = () => {
+    const dispatch = useAppDispatch();
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
         resolver: yupResolver(schema)
@@ -24,7 +22,7 @@ export const AddForm = ({addTodo}: AddFormProps) => {
     
     const onSubmit = (data: FormData) => {
         reset({title: '', assignee: '', description: ''}, {keepValues: false});
-        addTodo(data)
+        dispatch(addTask(data));
     }
 
     return (

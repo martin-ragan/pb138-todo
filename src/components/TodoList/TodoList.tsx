@@ -1,25 +1,29 @@
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { Task } from '../Task/Task'
-import { Todo } from '../../models/models';
 
-interface TodoListProps {
-    todos: Todo[];
-    deleteTodo: (id: string) => void;
-    changeComplete: (id: string) => void;
-}
 
-export const TodoList = ({ todos, deleteTodo, changeComplete }: TodoListProps) => {
+export const TodoList = () => {
+    const searchTerm = useAppSelector(state => state.searchTerm);
+    
+    const todos = useAppSelector(state => state.tasks.tasks.filter((todo) => {
+        return todo.title.toLowerCase().includes(searchTerm.toLowerCase());
+    }));
+
     return (
-        <ul className='flex flex-col gap-4 justify-center items-center mb-12'>
+        <>
             {
-                todos.map((todo) => { 
-                    return <Task
-                        key={todo.id}
-                        changeCompleteFn={() => changeComplete(todo.id)}
-                        deleteFn={() => deleteTodo(todo.id)}
-                        todo={todo}
-                    />
-                })
+                todos.length === 0 && <p className='text-white text-2xl'>Sorry, you don't have any tasks!</p>
             }
-        </ul>
+            <ul className='flex flex-col overflow-y-auto h-64'>
+                {
+                    todos.map((todo) => { 
+                        return <Task
+                            key={todo.id}
+                            todo={todo}
+                        />
+                    })
+                }
+            </ul>
+        </>
     )
 };

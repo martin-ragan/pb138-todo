@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 import { Todo } from '../../models/models';
 
 interface tasksState {
@@ -9,15 +9,13 @@ const initialState: tasksState = {
     tasks: []
 };
 
-let ID = 1;
-
 const tasksSlice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
         addTask: (state, action: PayloadAction<Omit<Todo, "id" | "completed">>) => {
             state.tasks.push({
-                id: (ID++).toString(),
+                id: nanoid(),
                 completed: false,
                 ...action.payload
             });
